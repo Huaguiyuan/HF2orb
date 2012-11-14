@@ -17,7 +17,7 @@ namespace HF{
 		
 	public:
 		Dos(const EngineParamsType& engineParams, HamType& hamiltonian, LatticeType& lattice) :
-			engineParams_(engineParams), hamiltonian_(hamiltonian), lattice_(lattice), lx_(engineParams_.lx), ly_(engineParams_.ly), sites_(lx_*ly_), hilbertSize_(hamiltonian_.getLength()), numOrb(hamiltonian_.getOrbs()), numSpin(hamiltonian_.getSpins()), Pi(3.1415926), nTBC(8)
+			engineParams_(engineParams), hamiltonian_(hamiltonian), lattice_(lattice), lx_(engineParams_.lx), ly_(engineParams_.ly), sites_(lx_*ly_), hilbertSize_(hamiltonian_.getLength()), numOrb(hamiltonian_.getOrbs()), numSpin(hamiltonian_.getSpins()), Pi(3.1415926), nTBC(16)
 		{
 		}
 				
@@ -25,7 +25,7 @@ namespace HF{
 		{
 			hamiltonian_.BuildHam();
 
-			size_t totalSize = hilbertSize_ * sites_ * sites_ * nTBC * nTBC;
+			size_t totalSize = hilbertSize_ * sites_ * nTBC * nTBC;
 			std::vector<FieldType> eigTmp(hilbertSize_);
 			std::vector<FieldType> eigAll(totalSize);
 
@@ -49,19 +49,24 @@ namespace HF{
 							count++;			
 					}
 			}
-			if(eigAll.size() != totalSize) {
+			long size = totalSize;
+			if(count*hilbertSize_ != size) {
 				std::cout<<"sizeofeigAll: "<<eigAll.size()<<" count: "<<count<<" totalSize: "<<totalSize<<std::endl;
 				throw std::runtime_error ("ERROR: calcDOS ");
 			}
+			//else fout << "EigenValuesAll:\n"<<eigAll<<std::endl;
 
 			std::vector<int> histogram;
 			std::vector<FieldType> leftPoints;
-			utils::MakeHistogram(eigAll, 100*nTBC, histogram, leftPoints);
+			utils::MakeHistogram(eigAll, 1000*nTBC, histogram, leftPoints);
+			long sum = 0;
 			for(size_t ii = 0; ii < histogram.size()-1; ii++) {
 				std::cout << ii << std::endl;
+				sum += histogram[ii];
 				fout << (leftPoints[ii]+leftPoints[ii+1])/2.0 - engineParams_.mu <<" "<<(1.0*histogram[ii]/totalSize)<<std::endl;
 			}
-			
+			sum += histogram[histogram.size()-1];
+			std::cout<<"sum: "<<sum<<" totalSize: "<<totalSize<<std::endl;
 		}
 		
 	private:
