@@ -97,7 +97,7 @@ namespace HF{
 //			chargeCorrelations(fout_);
 			if(fabs(engineParams_.omegaStep) > engineParams_.eps[0]) { 
 				std::cout<<"Calculating DOS"<<std::endl; 
-				dos.calcDOS(fout_);
+				dos.
 				//akw.calc_TBC_Print(fout_); 
 			} 
 			mfParamsNew.printout("New", fout_);

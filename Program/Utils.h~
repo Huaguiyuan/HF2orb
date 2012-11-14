@@ -142,7 +142,7 @@ namespace utils {
 	
 	// A simple function to make histogram 
 	template<typename FieldType>
-	void MakeHistogram(const std::vector<FieldType>& values, int numberOfBuckets, std::vector<int>& BucketContents, std::vector<FieldType>& BucketLefts)
+	void MakeHistogram(const std::vector<FieldType>& values, int numberOfBuckets, std::vector<int>& BucketContents)
 	{
 		FieldType minValue = *std::min_element(values.begin(), values.end());
 		FieldType maxValue = *std::max_element(values.begin(), values.end());
