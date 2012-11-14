@@ -7,6 +7,7 @@
 #include "GreenFunction.h"
 #include "Adjustments.h"
 #include "Akw.h"
+#include "Dos.h"
 
 namespace HF{
 	template<typename EngineParamsType, typename ModelParamsType, typename MFParamsType, typename LatticeType, typename HamType, typename FieldType>
@@ -15,6 +16,7 @@ namespace HF{
 		typedef HF::GreenFunction<EngineParamsType, LatticeType, HamType, FieldType> GreenFunType;
 		typedef Spf::Adjustments<EngineParamsType> AdjustType;
 		typedef HF::Akw<EngineParamsType, HamType, LatticeType, FieldType> AkwType;
+		typedef HF::Dos<EngineParamsType, HamType, LatticeType, FieldType> DosType;
 
 	public:	
 		
@@ -390,6 +392,7 @@ namespace HF{
 		HamType hamiltonian;
 		GreenFunType gf;
 		AkwType akw;
+		DosType dos;
 
 		const int numOrb;
 		std::ofstream fout_;

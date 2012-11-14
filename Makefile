@@ -7,7 +7,7 @@
 LDFLAGS = -L.   -llapack -lblas -lm -L../lib
 EXENAME = hf
 CPPFLAGS = -DNDEBUG  -IPartialPsimag -IProgram
-CXX = g++ -Werror -Wall -g3 -O0
+CXX = g++ -Werror -Wall -g3 -O3
 
 $(EXENAME): clean main.o 
 	$(CXX) -o $(EXENAME) main.o $(LDFLAGS) 

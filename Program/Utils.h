@@ -155,7 +155,7 @@ namespace utils {
 
 		BucketContents.resize(numberOfBuckets);
 
-		for(int i=0; i < values.size(); ++i)
+		for(size_t i=0; i < values.size(); ++i)
 		{
 			int k = static_cast<int> (floor( (values[i]-minValue)/bucketSize ));
 			++BucketContents[k];

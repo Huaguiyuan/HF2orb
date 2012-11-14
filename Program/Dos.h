@@ -17,7 +17,7 @@ namespace HF{
 		
 	public:
 		Dos(const EngineParamsType& engineParams, HamType& hamiltonian, LatticeType& lattice) :
-			engineParams_(engineParams), hamiltonian_(hamiltonian), lattice_(lattice), lx_(engineParams_.lx), ly_(engineParams_.ly), sites_(lx_*ly_), hilbertSize_(hamiltonian_.getLength()), numOrb(hamiltonian_.getOrbs()), numSpin(hamiltonian_.getSpins()), Pi(3.1415926), nTBC(16)
+			engineParams_(engineParams), hamiltonian_(hamiltonian), lattice_(lattice), lx_(engineParams_.lx), ly_(engineParams_.ly), sites_(lx_*ly_), hilbertSize_(hamiltonian_.getLength()), numOrb(hamiltonian_.getOrbs()), numSpin(hamiltonian_.getSpins()), Pi(3.1415926), nTBC(8)
 		{
 		}
 				
@@ -25,12 +25,13 @@ namespace HF{
 		{
 			hamiltonian_.BuildHam();
 
-			long totalSize = hilbertSize_ * sites_ * sites_ * nTBC * nTBC;
+			size_t totalSize = hilbertSize_ * sites_ * sites_ * nTBC * nTBC;
 			std::vector<FieldType> eigTmp(hilbertSize_);
 			std::vector<FieldType> eigAll(totalSize);
 
 			long count = 0;
 
+			fout << "#DOS" <<std::endl;
 			for(int ikx=lx_/2;ikx>-lx_/2;ikx--)
 				for(int i_delta_kx=0;i_delta_kx<nTBC;i_delta_kx++) {
 
@@ -42,29 +43,33 @@ namespace HF{
 							FieldType phaseX = double(i_delta_kx)/(nTBC);
 							FieldType phaseY = double(i_delta_ky)/(nTBC);
 
-							getEigenValues(kx,ky,omega,phaseX,phaseY,eigTmp);
+							getEigenValues(kx,ky,phaseX,phaseY,eigTmp);
 							for(int ix=0;ix<hilbertSize_;ix++) 
 								eigAll[count*hilbertSize_+ix]=eigTmp[ix];
 							count++;			
 					}
 			}
-			if(eigAll.size() != totalSize) throw std::runtime_error ("ERROR: calcDOS ");
+			if(eigAll.size() != totalSize) {
+				std::cout<<"sizeofeigAll: "<<eigAll.size()<<" count: "<<count<<" totalSize: "<<totalSize<<std::endl;
+				throw std::runtime_error ("ERROR: calcDOS ");
+			}
 
 			std::vector<int> histogram;
 			std::vector<FieldType> leftPoints;
 			utils::MakeHistogram(eigAll, 100*nTBC, histogram, leftPoints);
-			for(ii = 0; ii < histogram.size()-1; ii++) {
-				fout << (leftPoints[ii]+leftPoints[ii+1])/2.0 <<" "<<histogram[ii]<<std::endl;
+			for(size_t ii = 0; ii < histogram.size()-1; ii++) {
+				std::cout << ii << std::endl;
+				fout << (leftPoints[ii]+leftPoints[ii+1])/2.0 - engineParams_.mu <<" "<<(1.0*histogram[ii]/totalSize)<<std::endl;
 			}
 			
 		}
 		
 	private:
 
-		void getEigenValues(FieldType& kx, FieldType& ky, FieldType& omega, FieldType& phase_x, FieldType& phase_y, std::vector<FieldType>& eigsTBC)
+		void getEigenValues(FieldType& kx, FieldType& ky, FieldType& phase_x, FieldType& phase_y, std::vector<FieldType>& eigsTBC)
 		{
 			HamMatrixType hamTBC; 			
-			FieldType mu = engineParams_.mu; 
+			//FieldType mu = engineParams_.mu; 
 			hamTBC.resize(hilbertSize_,hilbertSize_);
 			bool test = creatHamTBC(hamTBC,phase_x,phase_y);
 
