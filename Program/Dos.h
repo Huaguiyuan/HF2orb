@@ -17,7 +17,7 @@ namespace HF{
 		
 	public:
 		Dos(const EngineParamsType& engineParams, HamType& hamiltonian, LatticeType& lattice) :
-			engineParams_(engineParams), hamiltonian_(hamiltonian), lattice_(lattice), lx_(engineParams_.lx), ly_(engineParams_.ly), sites_(lx_*ly_), hilbertSize_(hamiltonian_.getLength()), numOrb(hamiltonian_.getOrbs()), numSpin(hamiltonian_.getSpins()), Pi(3.1415926), nTBC(64)
+			engineParams_(engineParams), hamiltonian_(hamiltonian), lattice_(lattice), lx_(engineParams_.lx), ly_(engineParams_.ly), sites_(lx_*ly_), hilbertSize_(hamiltonian_.getLength()), numOrb(hamiltonian_.getOrbs()), numSpin(hamiltonian_.getSpins()), Pi(3.1415926), nTBC(256)
 		{
 		}
 				
@@ -58,7 +58,7 @@ namespace HF{
 
 			std::vector<int> histogram;
 			std::vector<FieldType> leftPoints;
-			utils::MakeHistogram(eigAll, 100*nTBC, histogram, leftPoints);
+			utils::MakeHistogram(eigAll, 2000, histogram, leftPoints);
 			long sum = 0;
 			for(size_t ii = 0; ii < histogram.size()-1; ii++) {
 				std::cout << ii << std::endl;
