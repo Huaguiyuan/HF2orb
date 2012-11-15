@@ -32,18 +32,18 @@ namespace HF{
 			long count = 0;
 
 			fout << "#DOS" <<std::endl;
-			for(int ikx=lx_/2;ikx>-lx_/2;ikx--)
-				for(int i_delta_kx=0;i_delta_kx<nTBC;i_delta_kx++) {
+			//for(int ikx=lx_/2;ikx>-lx_/2;ikx--)
+			for(int i_delta_kx=0;i_delta_kx<nTBC;i_delta_kx++) {
 
-					for(int iky=ly_/2;iky>-ly_/2;iky--)
-						for(int i_delta_ky=0;i_delta_ky<nTBC;i_delta_ky++) {
+					//for(int iky=ly_/2;iky>-ly_/2;iky--)
+				for(int i_delta_ky=0;i_delta_ky<nTBC;i_delta_ky++) {
 
-							FieldType kx=double(ikx)/lx_;
-							FieldType ky=double(iky)/ly_;
+							//FieldType kx=double(ikx)/lx_;
+							//FieldType ky=double(iky)/ly_;
 							FieldType phaseX = double(i_delta_kx)/(nTBC);
 							FieldType phaseY = double(i_delta_ky)/(nTBC);
 
-							getEigenValues(kx,ky,phaseX,phaseY,eigTmp);
+							getEigenValues(phaseX,phaseY,eigTmp);
 							for(int ix=0;ix<hilbertSize_;ix++) 
 								eigAll[count*hilbertSize_+ix]=eigTmp[ix];
 							count++;			
@@ -71,7 +71,7 @@ namespace HF{
 		
 	private:
 
-		void getEigenValues(FieldType& kx, FieldType& ky, FieldType& phase_x, FieldType& phase_y, std::vector<FieldType>& eigsTBC)
+		void getEigenValues(FieldType& phase_x, FieldType& phase_y, std::vector<FieldType>& eigsTBC)
 		{
 			HamMatrixType hamTBC; 			
 			//FieldType mu = engineParams_.mu; 
